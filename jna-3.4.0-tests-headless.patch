@@ -1,0 +1,11 @@
+diff -up ./build.xml.tests-headless ./build.xml
+--- ./build.xml.tests-headless	2012-03-07 11:56:41.702657823 +0100
++++ ./build.xml	2012-03-07 11:57:12.635887659 +0100
+@@ -561,6 +561,7 @@
+       <sysproperty key="jna.protected" value="true"/>
+       <sysproperty key="jna.builddir" file="${build}"/>
+       <jvmarg value="${vmopt.arch}"/>
++      <jvmarg value="-Djava.awt.headless=true"/>
+       <classpath><path refid="test.runpath"/></classpath>
+       <formatter type="brief" usefile="false"/>
+       <formatter type="xml"/>

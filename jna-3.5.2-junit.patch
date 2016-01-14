@@ -1,0 +1,48 @@
+diff -up ./build.xml.junit ./build.xml
+--- ./build.xml.junit	2013-04-29 15:06:12.423790515 +0200
++++ ./build.xml	2013-04-29 15:07:09.442166774 +0200
+@@ -250,7 +250,7 @@
+   <target name="-setup" depends="-dynamic-properties">
+     <path id="compile-test.path">
+       <path id="test.libs">
+-        <fileset dir="lib">
++        <fileset dir="/usr/share/java">
+           <include name="junit.jar"/>
+         </fileset>
+         <fileset dir="lib/test"/>
+@@ -441,7 +441,7 @@ osname=macosx;processor=x86;processor=x8
+     <subant target="jar" failonerror="true">
+       <property name="file.reference.jna.build" location="${build}"/>
+       <property name="file.reference.jna.jar" location="${build}/${jar}"/>
+-      <property name="libs.junit.classpath" location="lib/junit.jar"/>
++      <property name="libs.junit.classpath" location="/usr/share/java/junit.jar"/>
+       <property name="javac.source" value="${platform.compatibility}"/>
+       <property name="javac.target" value="${platform.compatibility}"/>
+       <fileset dir="${contrib}" includes="platform/build.xml" />
+@@ -456,7 +456,7 @@ osname=macosx;processor=x86;processor=x8
+     <subant target="jar" failonerror="true">
+       <property name="file.reference.jna.build" location="${build}"/>
+       <property name="file.reference.jna.jar" location="${build}/${jar}"/>
+-      <property name="libs.junit.classpath" location="lib/junit.jar"/>
++      <property name="libs.junit.classpath" location="/usr/share/java/junit.jar"/>
+       <fileset dir="${contrib}" includes="*/build.xml" excludes="platform/build.xml"/>
+     </subant>
+   </target>
+@@ -734,7 +734,7 @@ osname=macosx;processor=x86;processor=x8
+     <mkdir dir="${build}/jws"/>
+     <copy todir="${build}/jws" file="${build}/${jar}"/>
+     <copy todir="${build}/jws" file="${build}/${testjar}"/>
+-    <copy todir="${build}/jws" file="lib/junit.jar"/>
++    <copy todir="${build}/jws" file="/usr/share/java/junit.jar"/>
+     <copy todir="${build}/jws" file="lib/clover.jar"/>
+     <jar jarfile="${build}/jws/jnidispatch.jar">
+       <fileset dir="${build.native}" includes="*jnidispatch.*"/>
+@@ -845,7 +845,7 @@ osname=macosx;processor=x86;processor=x8
+     <subant target="test" failonerror="true">
+       <property name="file.reference.jna.build" location="${build}"/>
+       <property name="file.reference.jna.jar" location="${build}/${jar}"/>
+-      <property name="libs.junit.classpath" location="lib/junit.jar"/>
++      <property name="libs.junit.classpath" location="/usr/share/java/junit.jar"/>
+       <property name="javac.source" value="${test.compatibility}"/>
+       <property name="javac.target" value="${test.compatibility}"/>
+       <fileset dir="${contrib}" includes="platform/build.xml"/>
