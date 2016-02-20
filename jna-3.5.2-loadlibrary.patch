@@ -1,0 +1,108 @@
+diff -up ./src/com/sun/jna/Native.java.loadlib ./src/com/sun/jna/Native.java
+--- ./src/com/sun/jna/Native.java.loadlib	2013-04-29 15:23:30.988702267 +0200
++++ ./src/com/sun/jna/Native.java	2013-04-29 15:25:55.409671266 +0200
+@@ -670,99 +670,22 @@ public final class Native {
+ 
+     /**
+      * Loads the JNA stub library.
+-     * First tries jna.boot.library.path, then the system path, then from the
+-     * jar file.
++     * MODIFIED FROM UPSTREAM - we rip out all sorts of gunk here that is
++     * unnecessary when JNA is properly installed with the OS.
+      */
+     private static void loadNativeLibrary() {
+         removeTemporaryFiles();
+ 
+-        String libName = System.getProperty("jna.boot.library.name", "jnidispatch");
+-        String bootPath = System.getProperty("jna.boot.library.path");
+-        if (bootPath != null) {
+-            // String.split not available in 1.4
+-            StringTokenizer dirs = new StringTokenizer(bootPath, File.pathSeparator);
+-            while (dirs.hasMoreTokens()) {
+-                String dir = dirs.nextToken();
+-                File file = new File(new File(dir), System.mapLibraryName(libName));
+-                String path = file.getAbsolutePath();
+-                if (file.exists()) {
+-                    try {
+-                        System.load(path);
+-                        nativeLibraryPath = path;
+-                        return;
+-                    } catch (UnsatisfiedLinkError ex) {
+-                        // Not a problem if already loaded in anoteher class loader
+-                        // Unfortunately we can't distinguish the difference...
+-                        //System.out.println("File found at " + file + " but not loadable: " + ex.getMessage());
+-                    }
+-                }
+-                if (Platform.isMac()) {
+-                    String orig, ext;
+-                    if (path.endsWith("dylib")) {
+-                        orig = "dylib";
+-                        ext = "jnilib";
+-                    } else {
+-                        orig = "jnilib";
+-                        ext = "dylib";
+-                    }
+-                    path = path.substring(0, path.lastIndexOf(orig)) + ext;
+-                    if (new File(path).exists()) {
+-                        try {
+-                            System.load(path);
+-                            nativeLibraryPath = path;
+-                            return;
+-                        } catch (UnsatisfiedLinkError ex) {
+-                            System.err.println("File found at " + path + " but not loadable: " + ex.getMessage());
+-                        }
+-                    }
+-                }
+-            }
+-        }
+-        if (Platform.isAndroid()) {
+-            // Native libraries on android must be bundled with the APK
+-            System.setProperty("jna.nounpack", "true");
+-        }
+         try {
+-            if (!Boolean.getBoolean("jna.nosys")) {
+-                System.loadLibrary(libName);
+-                return;
+-            }
++            System.load("@JNIPATH@/" + System.mapLibraryName("jnidispatch"));
++            nativeLibraryPath = "@JNIPATH@/" + System.mapLibraryName("jnidispatch");
+         }
+         catch(UnsatisfiedLinkError e) {
+-            if (Boolean.getBoolean("jna.nounpack")) {
+-                throw e;
+-            }
+-        }
+-        if (!Boolean.getBoolean("jna.nounpack")) {
+-            loadNativeLibraryFromJar();
+-            return;
++            throw new RuntimeException(e);
+         }
+-        throw new UnsatisfiedLinkError("Native jnidispatch library not found");
+     }
+ 
+     static final String JNA_TMPLIB_PREFIX = "jna";
+-    /**
+-     * Attempts to load the native library resource from the filesystem,
+-     * extracting the JNA stub library from jna.jar if not already available.
+-     */
+-    private static void loadNativeLibraryFromJar() {
+-        try {
+-            String prefix = "com/sun/jna/" + getNativeLibraryResourcePrefix();
+-            File lib = extractFromResourcePath("jnidispatch", prefix, Native.class.getClassLoader());
+-            System.load(lib.getAbsolutePath());
+-            nativeLibraryPath = lib.getAbsolutePath();
+-            // Attempt to delete immediately once jnidispatch is successfully
+-            // loaded.  This avoids the complexity of trying to do so on "exit",
+-            // which point can vary under different circumstances (native
+-            // compilation, dynamically loaded modules, normal application, etc).
+-            if (isUnpacked(lib)) {
+-                deleteLibrary(lib);
+-            }
+-        }
+-        catch(IOException e) {
+-            throw new UnsatisfiedLinkError(e.getMessage());
+-        }
+-    }
+ 
+     /** Identify temporary files unpacked from classpath jar files. */
+     static boolean isUnpacked(File file) {
