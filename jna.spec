@@ -4,7 +4,7 @@
 
 Name:           %{?scl_prefix}%{pkg_name}
 Version:        3.5.2
-Release:        8.13%{?dist}
+Release:        8.14%{?dist}
 Summary:        Pure Java access to native libraries
 # src/com/sun/jna/WeakIdentityHashMap.java is from apache-cxf project
 License:        LGPLv2+ and ASL 2.0
@@ -69,7 +69,7 @@ This package contains the contributed examples for %{pkg_name}.
 
 %prep
 %setup -q -n %{pkg_name}-%{version}
-%{?scl:scl enable maven30 %{scl} - <<"EOF"}
+%{?scl:scl enable %{scl} - <<"EOF"}
 set -e -x
 cp %{SOURCE1} %{SOURCE3} .
 %patch0 -p1 -b .build
@@ -98,7 +98,7 @@ chmod -c 0644 LICENSE OTHERS CHANGES.md
 
 
 %build
-%{?scl:scl enable maven30 %{scl} - <<"EOF"}
+%{?scl:scl enable %{scl} - <<"EOF"}
 set -e -x
 # We pass -Ddynlink.native which comes from our patch because
 # upstream doesn't want to default to dynamic linking.
@@ -109,7 +109,7 @@ find contrib -name build -exec rm -rf {} \; || :
 %{?scl:EOF}
 
 %install
-%{?scl:scl enable maven30 %{scl} - <<"EOF"}
+%{?scl:scl enable %{scl} - <<"EOF"}
 set -e -x
 # jars
 install -D -m 644 build*/%{pkg_name}.jar %{buildroot}%{_javadir}/%{pkg_name}.jar
@@ -148,6 +148,9 @@ cp -a doc/javadoc/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Mon Jan 11 2016 Michal Srb <msrb@redhat.com> - 3.5.2-8.14
+- maven33 rebuild #2
+
 * Sat Jan 09 2016 Michal Srb <msrb@redhat.com> - 3.5.2-8.13
 - maven33 rebuild
 
