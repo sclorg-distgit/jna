@@ -4,7 +4,7 @@
 
 Name:           %{?scl_prefix}%{pkg_name}
 Version:        3.5.2
-Release:        8.14%{?dist}
+Release:        8.15%{?dist}
 Summary:        Pure Java access to native libraries
 # src/com/sun/jna/WeakIdentityHashMap.java is from apache-cxf project
 License:        LGPLv2+ and ASL 2.0
@@ -148,6 +148,9 @@ cp -a doc/javadoc/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Mon Feb 08 2016 Michal Srb <msrb@redhat.com> - 3.5.2-8.15
+- Fix BR on maven-local & co.
+
 * Mon Jan 11 2016 Michal Srb <msrb@redhat.com> - 3.5.2-8.14
 - maven33 rebuild #2
 
